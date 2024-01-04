@@ -46,4 +46,4 @@ crime_df = spark.read \
 crime_rows = crime_df.count()
 print(f"Crime data rows -> {crime_rows}")
 for col in crime_df.dtypes:
-    print(col[1])
+    print(col[0] + " -> " + col[1])

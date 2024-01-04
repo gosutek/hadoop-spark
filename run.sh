@@ -14,15 +14,18 @@ then
   exit 1
 fi
 
+mkdir -p ./output
+
 while getopts "s:l" option; do
   case ${option} in
     s)
       script=${OPTARG}
-      echo "Option $script"
       ;;
     l)
       echo "Available scripts:"
-      echo " 1 - Prints rows and datatype of Crime Data DataFrame"
+      echo " 1 - Prints rows and datatype of Crime Data DataFrame. Output \
+        in output-1.txt"
+      echo " 2 - Run query 1. Output in output-2.txt"
       echo "Do test.sh [-s [1...5]] to execute"
       ;;
     :)
@@ -38,7 +41,8 @@ done
 
 case ${script} in
   1)
-    echo "Running start.py"
+    /home/master/opt/spark/bin/spark-submit \
+      row-dtype.py > output-1.txt
     ;;
   2)
     echo "Running script 2"
