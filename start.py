@@ -6,7 +6,7 @@ path_20_pre = "hdfs://advdb-master:54310/user/master/pyspark/data/crimedata-2020
 
 spark = SparkSession \
         .builder \
-        .appname("Advdb") \
+        .appName("Advdb") \
         .getOrCreate()
 
 crime_data_schema = StructType([
