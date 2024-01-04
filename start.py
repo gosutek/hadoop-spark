@@ -1,8 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructField, StructType, IntegerType, DoubleType, DateType, StringType
 
-path_10_19 = "hdfs://advdb-master:54310/user/master/pyspark/data/crimedata-2010-2019.csv"
-path_20_pre = "hdfs://advdb-master:54310/user/master/pyspark/data/crimedata-2020-present.csv"
+crime_data_path = "hdfs://advdb-master:54310/user/master/pyspark/crime_data/"
 
 spark = SparkSession \
         .builder \
@@ -40,6 +39,11 @@ crime_data_schema = StructType([
     StructField("LON", DoubleType(), True)
     ])
 
-crime_df = spark.read.csv(path_10_10 + "," + path_20_pre, header=True, schema = crime_data_schema)
+crime_df = spark.read \
+        .schema(crime_data_schema) \
+        .csv(crime_data_path) \
 
-crime_df.show(5)
+crime_rows = crime_df.count()
+print(f"Crime data rows -> {crime_rows}")
+for col in crime_df.dtypes:
+    print(col[1])
