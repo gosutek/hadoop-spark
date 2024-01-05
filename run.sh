@@ -44,6 +44,7 @@ case ${script} in
   1)
     /home/master/opt/spark/bin/spark-submit \
       ./scripts/preprocessing.py
+    ;;
   2)
     /home/master/opt/spark/bin/spark-submit \
       ./scripts/rows-dtypes.py > ./output/output-1.txt
