@@ -1,12 +1,11 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructField, StructType, IntegerType, DoubleType, DateType, StringType
 
-crime_data_path = "hdfs://advdb-master:54310/user/master/pyspark/crime_data/"
+DATA_PATH = "hdfs://advdb-master:54310/user/master/crime_data/"
+PYSPARK_PATH = "hdfs://advdb-master:54310/user/master/pyspark"
 
-spark = SparkSession \
-        .builder \
-        .appName("Advdb") \
-        .getOrCreate()
+spark = SparkSession.builder \
+        .appName("preprocessing").getOrCreate
 
 crime_data_schema = StructType([
     StructField("DR_NO", StringType(), True),
@@ -43,7 +42,4 @@ crime_df = spark.read \
         .schema(crime_data_schema) \
         .csv(crime_data_path) \
 
-crime_rows = crime_df.count()
-print(f"Crime data rows -> {crime_rows}")
-for col in crime_df.dtypes:
-    print(col[0] + " -> " + col[1])
+crime_df.write.save(PYSPARK_PATH, format="csv", mode="overwrite")
