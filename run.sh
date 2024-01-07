@@ -24,9 +24,6 @@ while getopts "s:l" option; do
     l)
       echo "Available scripts:"
       echo " 1 - Preprocessing script."
-      echo " 2 - Prints rows and datatype of Crime Data DataFrame. Output" \
-        "in output-1.txt"
-      echo " 3 - Run query 1. Output in output-2.txt"
       echo "Do test.sh [-s [1...5]] to execute"
       ;;
     :)
@@ -43,14 +40,7 @@ done
 case ${script} in
   1)
     /home/master/opt/spark/bin/spark-submit \
-      ./scripts/preprocessing.py
-    ;;
-  2)
-    /home/master/opt/spark/bin/spark-submit \
-      ./scripts/rows-dtypes.py > ./output/output-1.txt
-    ;;
-  3)
-    echo "Running script 2"
+      ./rows-dtypes.py > ./output/output-1.txt
     ;;
 esac
 
