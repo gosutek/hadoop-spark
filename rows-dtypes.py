@@ -5,7 +5,7 @@ DATA_PATH = "hdfs://advdb-master:54310/user/master/crime_data/"
 PYSPARK_PATH = "hdfs://advdb-master:54310/user/master/pyspark/"
 
 spark = SparkSession.builder \
-        .appName("preprocessing").getOrCreate()
+        .appName("advdb").getOrCreate()
 
 crime_data_schema = StructType([
     StructField("DR_NO", StringType(), True),
@@ -42,6 +42,10 @@ crime_df = spark.read \
         .schema(crime_data_schema) \
         .csv(DATA_PATH) \
 
-crime_df.write \ 
-    .option("header", "true") \
-    .save(PYSPARK_PATH, format="csv", mode="overwrite")
+crime_rows = crime_df.count()
+print(f"Crime data rows -> {crime_rows}")
+for col in crime_df.dtypes:
+    print(col[0] + " -> " + col[1])
+
+test_df = crime_df.groupBy("Date Rptd").count()
+test_df.show(5)
