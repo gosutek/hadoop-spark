@@ -17,4 +17,3 @@ query1_df = query1_df.withColumn('#', row_number().over( \
         .orderBy(desc('crime_total')))) \
         .filter(col('#') < 4)
 query1_df.show()
-

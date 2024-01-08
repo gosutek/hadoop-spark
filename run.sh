@@ -27,7 +27,9 @@ while getopts "s:l" option; do
     l)
       echo "Available scripts:"
       echo " 1 - Preprocessing script."
-      echo "Do test.sh [-s [1...5]] to execute"
+      echo " 2 - Query 1 using Dataframe API."
+      echo " 3 - Query 1 using SQL API."
+      echo "Do run.sh [-s [1...5]] to execute"
       ;;
     :)
       usage
