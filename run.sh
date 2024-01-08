@@ -1,6 +1,7 @@
 #!/bin/bash
 
 scriptname=$0
+SCRIPTS_PATH="./scripts"
 
 function usage {
   echo "Usage: $scriptname [-s scriptname]"
@@ -40,7 +41,7 @@ done
 case ${script} in
   1)
     /home/master/opt/spark/bin/spark-submit \
-      ./rows-dtypes.py > ./output/output-1.txt
+      $SCRIPTS_PATH/preprocessing.py > ./output/output-preprocessing.txt
     ;;
 esac
 
