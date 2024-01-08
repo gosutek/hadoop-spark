@@ -43,10 +43,14 @@ done
 case ${script} in
   1)
     $SPARK_HOME/bin/spark-submit \
-      $SCRIPTS_PATH/preprocessing.py > $OUTPUT_PATH/output-preprocessing.txt
+	$SCRIPTS_PATH/preprocessing.py > $OUTPUT_PATH/output-preprocessing.txt
     ;;
   2)
     $SPARK_HOME/bin/spark-submit \
-      $SCRIPTS_PATH/query-1.py > $OUTPUT_PATH/output-1.txt
+	$SCRIPTS_PATH/query-1_dataframe.py > $OUTPUT_PATH/output-1_dataframe.txt
+    ;;
+  3)
+    $SPARK_HOME/bin/spark-submit \
+	$SCRIPTS_PATH/query-1_sql.py > $OUTPUT_PATH/output-1_sql.txt
+    ;;
 esac
-

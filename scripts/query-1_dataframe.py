@@ -6,7 +6,7 @@ from pyspark.sql.window import *
 export_path = 'hdfs://advdb-master:54310/user/master/exports/'
 
 spark = SparkSession.builder \
-        .appName('query-1').getOrCreate()
+        .appName('query-1_DATAFRAME').getOrCreate()
 
 query1_df = spark.read.format('csv').option('header', 'true').load(export_path)
 query1_df = query1_df.groupBy(year('Date Rptd').alias('year'),month('Date Rptd').alias('month')) \

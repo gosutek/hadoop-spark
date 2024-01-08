@@ -52,7 +52,7 @@ second = spark.read \
         .csv(crime_2020_pre_path)
 
 crime_df.union(second)
-crime_df = crime_df.withColumn('Date Rptd', to_date(col('Date Rptd'), format='MM/dd/yyy hh:mm:ss a'))
+crime_df = crime_df.withColumn('Date Rptd', to_date(col('Date Rptd'), format='MM/dd/yyyy hh:mm:ss a'))
 crime_df = crime_df.withColumn('DATE OCC', to_date(col('DATE OCC'), format='MM/dd/yyyy hh:mm:ss a'))
 crime_df.write \
         .option('header', 'true') \
@@ -60,13 +60,3 @@ crime_df.write \
 crime_rows = crime_df.count()
 print(f'Crime data rows -> {crime_rows}')
 crime_df.printSchema()
-
-query1_df = crime_df.groupBy(year('Date Rptd').alias('year'),month('Date Rptd').alias('month')) \
-        .agg(count('DR_NO').alias('crime_total')) \
-        .orderBy(col('year').asc(), col('crime_total').desc())
-query1_df = query1_df.withColumn('#', row_number().over( \
-        Window.partitionBy('year') \
-        .orderBy(desc('crime_total')))) \
-        .filter(col('#') < 4)
-query1_df.show()
-loaded_fs = spark.read.format('csv').option('header', 'true').load(export_path).show()
