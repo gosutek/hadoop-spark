@@ -31,6 +31,7 @@ while getopts "s:l" option; do
       echo " 3 - Query 1 using SQL API."
       echo " 4 - Query 2 using Dataframe API."
       echo " 5 - Query 2 using RDD API."
+      echo " 6 - Query 3."
       echo "Do run.sh [-s [1...5]] to execute"
       ;;
     :)
@@ -64,5 +65,9 @@ case ${script} in
   5)
     $SPARK_HOME/bin/spark-submit \
 	$SCRIPTS_PATH/query-2_RDD.py > $OUTPUT_PATH/output-2_RDD.txt
+    ;;
+  6)
+    $SPARK_HOME/bin/spark-submit \
+	$SCRIPTS_PATH/query-3.py > $OUTPUT_PATH/output-3.txt
     ;;
 esac
