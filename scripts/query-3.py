@@ -28,7 +28,6 @@ vict_code = { \
         'X' : 'Unknown',
         'Z' : 'Asian Indian'
         }
-#my_decoder = udf(lambda cd: vict_code[cd])
 spark = SparkSession.builder \
         .appName('query-3').getOrCreate()
 
@@ -45,13 +44,15 @@ revgeo = spark.read \
         .load(revgeo_path)
 
 query3_df = query3_df.filter( (year('Date Rptd') == 2015) & (col('Vict Descent').isNotNull()) ) # filter out the nulls
+revgeo = revgeo.withColumn('ZIPCode', \
+        regexp_extract('ZIPCode', '(\d+)[-]*(\d*)', 1))
 revgeo = revgeo.withColumn('ZIPCode', revgeo['ZIPCode'].cast('integer'))
 income = income.withColumn('Estimated Median Income', \
         regexp_replace('Estimated Median Income', '[$,]', '').cast('integer'))
 rich = income.orderBy(desc('Estimated Median Income')).limit(3)
 income = income.orderBy(asc('Estimated Median Income')).limit(3).union(rich)
-revgeo.join(income, revgeo['ZIPcode'] == income['Zip Code'], 'leftsemi')
-query3_df.join(revgeo, \
+revgeo = revgeo.join(income, revgeo['ZIPcode'] == income['Zip Code'], 'leftsemi')
+query3_df = query3_df.join(revgeo, \
         (query3_df['LAT'] == revgeo['LAT']) & (query3_df['LON'] == revgeo['LON']), \
         'leftsemi')
 query3_df = query3_df.withColumn('Vict Descent', udf(lambda x: vict_code[x])('Vict Descent'))

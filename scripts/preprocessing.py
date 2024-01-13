@@ -27,7 +27,7 @@ crime_data_schema = StructType([
     StructField('Vict Descent', StringType(), True),
     StructField('Premis Cd', StringType(), True),
     StructField('Premis Desc', StringType(), True),
-    StructField('Weapon Used Cd', StringType(), True),
+    StructField('Weapon Used Cd', IntegerType(), True),
     StructField('Weapon Desc', StringType(), True),
     StructField('Status', StringType(), True),
     StructField('Status Desc', StringType(), True),

@@ -21,5 +21,6 @@ query2_df = spark.read.format('csv').option('header', 'true').load(export_path)
 rdd = query2_df.rdd
 rdd = rdd.filter(lambda row : row['Premis Cd'] == '101')
 rdd = rdd.map(lambda row : time_of_day(row['TIME OCC']))
-dict = rdd.countByValue()
-print(dict.items())
+_dict = rdd.countByValue()
+_dict = {k: v for k, v in sorted(_dict.items(), key=lambda x: x[1], reverse=True)}
+print(_dict.items())
