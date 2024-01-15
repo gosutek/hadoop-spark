@@ -55,3 +55,21 @@ query4_2_df = join_1.groupBy(col('DIVISION').alias('division')) \
         .agg(round(avg('pd_distance'), 3).alias('average_distance'), count('DR_NO').alias('#')) \
         .orderBy(col('division').desc())
 query4_2_df.show(5)
+# Query4-3
+min_df = query4_df.withColumn('result', \
+                                   udf(lambda lat1, lon1: \
+                                       min_distance(lat1, lon1), \
+                                       StructType([StructField('dst', DoubleType()), StructField('div', StringType())])) \
+                                   (query4_df.LAT, query4_df.LON)).cache()
+min_df = min_df.withColumn('pd_distance', col('result.dst'))
+min_df = min_df.withColumn('DIVISION', col('result.div'))
+min_df = min_df.drop('result')
+query4_3_df = min_df.groupBy(year('Date Rptd').alias('year')) \
+        .agg(round(avg('pd_distance'), 3).alias('average_distance'), count('DR_NO').alias('#')) \
+        .orderBy(col('year').asc())
+query4_3_df.show(5)
+# Query4-4
+query4_4_df = min_df.groupBy(col('DIVISION').alias('division')) \
+        .agg(round(avg('pd_distance'), 3).alias('average_distance'), count('DR_NO').alias('#')) \
+        .orderBy(col('division').desc())
+query4_4_df.show(5)
