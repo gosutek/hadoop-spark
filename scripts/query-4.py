@@ -8,6 +8,13 @@ export_path = 'hdfs://advdb-master:54310/user/master/exports/'
 stations_path = 'hdfs://advdb-master:54310/user/master/other_data/LAPD_Police_Stations.csv'
 lib_path = 'hdfs://advdb-master:54310/user/master/lib/'
 
+_hint = { 
+    'bc' : 'BROADCAST',
+    'mg' : 'MERGE',
+    'sh' : 'SHUFFLE_HASH',
+    'sr' : 'SHUFFLE_REPLICATE_NL'
+}
+
 def get_distance(lat1, lon1, lat2, lon2):
     return geopy.distance.geodesic(( float(lat1), float(lon1) ), ( float(lat2), float(lon2) )).km
 
@@ -42,6 +49,8 @@ query4_df = query4_df.withColumn('LON', query4_df['LON'].cast(DoubleType()))
 query4_df = query4_df.filter(( query4_df['LAT'] != 0 ) & ( query4_df['LON'] != 0 ))
 # Query4-1
 join_1 = query4_df.join(stations, query4_df['AREA'] == stations['PREC'], 'inner')
+#join_1 = query4_df.join(stations.hint(_hint['sr']), query4_df['AREA'] == stations['PREC'], 'inner')
+#join_1.explain()
 join_1 = join_1.withColumn('pd_distance', \
                                  udf(lambda lat1, lon1, lat2, lon2: \
                                      get_distance(lat1, lon1, lat2, lon2)) \
