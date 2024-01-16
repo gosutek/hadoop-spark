@@ -1,10 +1,13 @@
 import re
 from pyspark.sql import SparkSession
+from pyspark.sql.types import *
+from pyspark.sql.functions import *
+from pyspark.sql.window import *
 
 export_path = 'hdfs://advdb-master:54310/user/master/exports/'
 
 def time_of_day(str):
-    x = re.search(r'(?<=T)[^:]+', str)
+    x = re.search(r'\d{2}', str)
     if x is not None:
         iH = int(x.group())
         f = lambda iH, hDwn, hUp, v: v if iH >= hDwn and iH < hUp else None
