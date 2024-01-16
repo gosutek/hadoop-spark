@@ -7,6 +7,13 @@ export_path = 'hdfs://advdb-master:54310/user/master/exports/'
 income_path = 'hdfs://advdb-master:54310/user/master/other_data/LA_income_2015.csv'
 revgeo_path = 'hdfs://advdb-master:54310/user/master/other_data/revgecoding.csv'
 
+#_hint = { 
+#    'bc' : 'BROADCAST',
+#    'mg' : 'MERGE',
+#    'sh' : 'SHUFFLE_HASH',
+#    'sr' : 'SHUFFLE_REPLICATE_NL'
+#}
+
 vict_code = { \
         'A' : 'Other Asian',
         'B' : 'Black',
@@ -52,9 +59,15 @@ income = income.withColumn('Estimated Median Income', \
 rich = income.orderBy(desc('Estimated Median Income')).limit(3)
 income = income.orderBy(asc('Estimated Median Income')).limit(3).union(rich)
 revgeo = revgeo.join(income, revgeo['ZIPcode'] == income['Zip Code'], 'leftsemi')
+#revgeo = revgeo.join(income.hint(_hint['sr']), revgeo['ZIPcode'] == income['Zip Code'], 'leftsemi')
+#revgeo.explain()
 query3_df = query3_df.join(revgeo, \
         (query3_df['LAT'] == revgeo['LAT']) & (query3_df['LON'] == revgeo['LON']), \
         'leftsemi')
+#query3_df = query3_df.join(revgeo.hint(_hint['sr']), \
+#        (query3_df['LAT'] == revgeo['LAT']) & (query3_df['LON'] == revgeo['LON']), \
+#        'leftsemi')
+#query3_df.explain()
 query3_df = query3_df.withColumn('Vict Descent', udf(lambda x: vict_code[x])('Vict Descent'))
 query3_df = query3_df.groupBy('Vict Descent') \
         .agg(count('Vict Descent').alias('#')) \
