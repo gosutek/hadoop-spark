@@ -1,16 +1,17 @@
 from pyspark.sql import SparkSession
 
-export_path = 'hdfs://advdb-master:54310/user/master/exports/'
+export_path = "hdfs://advdb-master:54310/user/master/exports/"
 
-spark = SparkSession.builder \
-        .appName('query-1_SQL').getOrCreate()
+spark = SparkSession.builder.appName("query-1_SQL").getOrCreate()
 
-query1_df = spark.read \
-        .format('csv') \
-        .option('header', 'true') \
-        .load(export_path) \
-        .createOrReplaceTempView('table1')
-spark.sql("""
+query1_df = (
+    spark.read.format("csv")
+    .option("header", "true")
+    .load(export_path)
+    .createOrReplaceTempView("table1")
+)
+spark.sql(
+    """
         SELECT *
         FROM (
             SELECT
@@ -23,4 +24,5 @@ spark.sql("""
             ORDER BY year ASC, month DESC
         )
         WHERE `#` < 4;
-    """).show()
+    """
+).show()
