@@ -16,8 +16,9 @@ time_of_day = when( \
         .when( \
             (col('hour') >= 17) & ((col('hour') <= 20) & (col('minute') <= 59)), 'Evening') \
         .otherwise('Night')
+query2_df = query2_df.withColumn('TIME OCC', to_timestamp(col('TIME OCC'), 'HHmm'))
 query2_df = query2_df.select(hour('TIME OCC').alias('hour'), minute('TIME OCC').alias('minute'), col('Premis Desc')) \
-        .filter(col('Premis Cd') == 101)
+            .filter(col('Premis Cd') == '101')
 query2_df = query2_df.withColumn('time_of_day', time_of_day)
 query2_df = query2_df.groupBy('time_of_day') \
         .agg(count('Premis Desc').alias('crimes_commited')) \
