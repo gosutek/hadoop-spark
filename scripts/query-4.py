@@ -45,7 +45,7 @@ join_1 = query4_df.join(stations, query4_df['AREA'] == stations['PREC'], 'inner'
 join_1 = join_1.withColumn('pd_distance', \
                                  udf(lambda lat1, lon1, lat2, lon2: \
                                      get_distance(lat1, lon1, lat2, lon2)) \
-                                 ( join_1.LAT, join_1.LON, join_1.Y, join_1.X ))
+                                 ( join_1.LAT, join_1.LON, join_1.Y, join_1.X )).cache()
 query4_1_df = join_1.groupBy(year('Date Rptd').alias('year')) \
         .agg(round(avg('pd_distance'), 3).alias('average_distance'), count('DR_NO').alias('#')) \
         .orderBy(col('year').asc())
@@ -60,10 +60,10 @@ min_df = query4_df.withColumn('result', \
                                    udf(lambda lat1, lon1: \
                                        min_distance(lat1, lon1), \
                                        StructType([StructField('dst', DoubleType()), StructField('div', StringType())])) \
-                                   (query4_df.LAT, query4_df.LON)).cache()
+                                   (query4_df.LAT, query4_df.LON))
 min_df = min_df.withColumn('pd_distance', col('result.dst'))
 min_df = min_df.withColumn('DIVISION', col('result.div'))
-min_df = min_df.drop('result')
+min_df = min_df.drop('result').cache()
 query4_3_df = min_df.groupBy(year('Date Rptd').alias('year')) \
         .agg(round(avg('pd_distance'), 3).alias('average_distance'), count('DR_NO').alias('#')) \
         .orderBy(col('year').asc())
