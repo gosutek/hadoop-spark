@@ -7,7 +7,7 @@ OUTPUT_PATH="./output"
 
 function usage {
 	echo "Usage: $scriptname [-s scriptname]"
-	echo "    -s [1...5] - specify script to run"
+	echo "    -s [1...9] - specify script to run"
 	echo "    -l - list available scripts"
 }
 
