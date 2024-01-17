@@ -1,0 +1,12 @@
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- SortMergeJoin [AREA#109], [PREC#95], Inner
+   :- Sort [AREA#109 ASC NULLS FIRST], false, 0
+   :  +- Exchange hashpartitioning(AREA#109, 200), ENSURE_REQUIREMENTS, [plan_id=63]
+   :     +- Project [DR_NO#17, Date Rptd#18, DATE OCC#19, TIME OCC#20, cast(AREA#21 as int) AS AREA#109, AREA NAME#22, Rpt Dist No#23, Part 1-2#24, Crm Cd#25, Crm Cd Desc#26, Mocodes#27, Vict Age#28, Vict Sex#29, Vict Descent#30, Premis Cd#31, Premis Desc#32, Weapon Used Cd#33, Weapon Desc#34, Status#35, Status Desc#36, Crm Cd 1#37, Crm Cd 2#38, Crm Cd 3#39, Crm Cd 4#40, ... 4 more fields]
+   :        +- Filter ((((((isnotnull(Weapon Used Cd#33) AND isnotnull(LAT#43)) AND isnotnull(LON#44)) AND StartsWith(Weapon Used Cd#33, 1)) AND NOT (cast(LAT#43 as double) = 0.0)) AND NOT (cast(LON#44 as double) = 0.0)) AND isnotnull(cast(AREA#21 as int)))
+   :           +- FileScan csv [DR_NO#17,Date Rptd#18,DATE OCC#19,TIME OCC#20,AREA#21,AREA NAME#22,Rpt Dist No#23,Part 1-2#24,Crm Cd#25,Crm Cd Desc#26,Mocodes#27,Vict Age#28,Vict Sex#29,Vict Descent#30,Premis Cd#31,Premis Desc#32,Weapon Used Cd#33,Weapon Desc#34,Status#35,Status Desc#36,Crm Cd 1#37,Crm Cd 2#38,Crm Cd 3#39,Crm Cd 4#40,... 4 more fields] Batched: false, DataFilters: [isnotnull(Weapon Used Cd#33), isnotnull(LAT#43), isnotnull(LON#44), StartsWith(Weapon Used Cd#33..., Format: CSV, Location: InMemoryFileIndex(1 paths)[hdfs://advdb-master:54310/user/master/exports], PartitionFilters: [], PushedFilters: [IsNotNull(Weapon Used Cd), IsNotNull(LAT), IsNotNull(LON), StringStartsWith(Weapon Used Cd,1)], ReadSchema: struct<DR_NO:string,Date Rptd:string,DATE OCC:string,TIME OCC:string,AREA:string,AREA NAME:string...
+   +- Sort [PREC#95 ASC NULLS FIRST], false, 0
+      +- Exchange hashpartitioning(PREC#95, 200), ENSURE_REQUIREMENTS, [plan_id=64]
+         +- Filter isnotnull(PREC#95)
+            +- FileScan csv [X#90,Y#91,FID#92,DIVISION#93,LOCATION#94,PREC#95] Batched: false, DataFilters: [isnotnull(PREC#95)], Format: CSV, Location: InMemoryFileIndex(1 paths)[hdfs://advdb-master:54310/user/master/other_data/LAPD_Police_Stations...., PartitionFilters: [], PushedFilters: [IsNotNull(PREC)], ReadSchema: struct<X:double,Y:double,FID:int,DIVISION:string,LOCATION:string,PREC:int>
